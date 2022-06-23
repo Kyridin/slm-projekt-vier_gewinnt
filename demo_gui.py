@@ -109,7 +109,7 @@ while running:
     #-----temporary code - maybe we will make it a feature for a special mode :D
     #-------------------------------------------------------------------#
     if pressed_button_vert[pygame.K_DOWN]:
-        
+
         y += y_spacing_for_76
         time.sleep(0.07)
 
