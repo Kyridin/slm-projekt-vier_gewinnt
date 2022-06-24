@@ -113,6 +113,32 @@ while (True):
                 break
         return gewinner, checkpoint, r
 
+
+    def suche_gewinner_bot(feld):  #
+        gewinner = False
+        for stein in range(1, len(feld) + 1):
+            checkpoint = list(feld)[-stein]
+
+            for r in RICHTUNGEN:
+                move = checkpoint
+                reihe = 0
+                for i in range(1, 4):
+                    move = addiere_tupelpaar(move, r)
+
+                    if (move in feld):
+                        if (feld[checkpoint] == feld[move]):
+                            reihe += 1
+                        else:
+                            break
+                if (reihe == 3):
+                    break
+
+            if (reihe == 3):
+                gewinner = True
+                print("Gewonnen hat Spieler: ", feld[checkpoint])
+                break
+        return gewinner
+
         # ----------------------------------------------------------------------
         #                                BOT Stuff
         # ----------------------------------------------------------------------
@@ -138,6 +164,7 @@ while (True):
         """
         # check ob Bot oder Spieler gewinnen kann und setze in die Spalte einen Stein
         move = suche_gewinner_move()[0]
+        print(move)
         if move != -1:
             return move
 
@@ -171,13 +198,14 @@ while (True):
                     zeile = finde_tiefste_zeile(col)
                     temp_spielfeld[(col, zeile)] = 'X' if player == 0 else 'O'
 
-                    if suche_gewinner(temp_spielfeld[0]):
+                    if suche_gewinner_bot(temp_spielfeld):
                         gewinner -= player
+                        print(gewinner)
                         return (col, gewinner)  # -2 = Bot gewinnt, -3 = spieler gewinnt
                 except:
                     pass
 
-        return (-1, None)
+        return (-1, "error_move")
 
 
     # ----------------------------------------------------------------------
@@ -324,6 +352,18 @@ while (True):
         convert_zeile_y[i] = 240 + shift
         shift += 87  # y_spacing_for_76
 
+    convert_spalte_x_bot = {}
+    shift = 0
+    for i in range(7):
+        convert_spalte_x_bot[i] = 313 + shift
+        shift += x_spacing_for_76
+
+    convert_zeile_y_bot = {}
+    shift = 40
+    for i in reversed(range(6)):
+        convert_zeile_y_bot[i] = 240 + shift
+        shift += y_spacing_for_76
+
 
     def finde_richtung(r):
         # senkrecht
@@ -346,13 +386,13 @@ while (True):
     # ----------------------------------------------------------------------
     #                                Game
     # ----------------------------------------------------------------------
-
     anfang = random.randint(0, 1)
     spieler = True if anfang == 0 else False  # True: Spieler 1; False: Spieler 2
-    bot = False  # True: Bot aktiviert (1 Spieler); False: 2 Spieler
+    bot = True  # True: Bot aktiviert (1 Spieler); False: 2 Spieler
     bot_schwierigkeit = 1  # 0 = Easy ; 1 = Normal ; 2 = Hard
     running = True  # 'e' als Input zum Beenden des Spiels
     gewinner = False
+    unentschieden = False
 
     # counter is sometimes useful for fixing things
     counter = 0
@@ -382,19 +422,23 @@ while (True):
                 x -= x_spacing_for_76
                 time.sleep(0.07)
 
-        if pressed_button_vert[pygame.K_RETURN]:
-            if spalte_gueltig(x_index - 1):
-                spalte = x_index - 1
-                # --------------------------------------------------
-                if bot and not spieler:
-                    if bot_schwierigkeit == 0:
-                        spalte = bot_easy_move()
-                    elif bot_schwierigkeit == 1:
-                        spalte = bot_normal_move()
-                    else:
-                        spalte = bot_hard_move()
+        if pressed_button_vert[pygame.K_RETURN] or (bot and not spieler):
+
+            # --------------------------------------------------
+            if bot and not spieler:
+                if bot_schwierigkeit == 0:
+                    spalte = bot_easy_move()
+                elif bot_schwierigkeit == 1:
+                    spalte = bot_normal_move()
                 else:
-                    spalte = x_index - 1
+                    spalte = bot_hard_move()
+            else:
+                spalte = x_index - 1
+
+            if spalte_gueltig(spalte):
+
+                print("x: ", x, ", spalte: ", spalte)
+                x = convert_spalte_x_bot[spalte]  # Achtung hier können noch fehler auftreten! Keine Ahnung wie?
 
                 zeile = finde_tiefste_zeile(spalte)
                 print(spalte, zeile)
@@ -409,9 +453,12 @@ while (True):
                     gewinner = True
                 if check_unentschieden():
                     running = False
+                    unentschieden = True
                 # --------------------------------------------------
 
+                # Achtung hier können noch fehler auftreten! Keine Ahnung wie?
                 drop_stone(convert_zeile_dropStone[zeile])  # Number of Falling Rows
+                x = convert_spalte_x_bot[x_index - 1]
                 print(x, "|", y)
 
         if (gewinner):
@@ -419,6 +466,8 @@ while (True):
             richtung = suche_gewinner(spielfeld)[2]
             draw_winning_surface(pos_endstein, richtung)
             # pygame.quit()
+        elif (unentschieden):
+            pass
         else:
             draw_screen_surface()
 
@@ -427,13 +476,15 @@ while (True):
         counter += 1
         # print(counter)
         # -------------------------------------------
-    pygame.time.wait(1000)
+    pygame.time.wait(5000)
 
     counter += 1
     # print(counter)
+    '''
     spalte = input("Beenden: ")
     if spalte == 'j':
         pygame.quit()
         break
     else:
         pass
+    '''
