@@ -27,7 +27,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.mainKonsoleUndGUI">
     <configuration name="demo_gui" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="slm-projekt-vier_gewinnt" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -98,8 +98,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.mainKonsoleUndGUI" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.demo_gui" />
       </list>
     </recent_temporary>
