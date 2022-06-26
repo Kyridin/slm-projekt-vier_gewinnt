@@ -154,7 +154,7 @@ while (True):
         """Bot, der zufällige moves wählt"""
         # for i in range(3):
         #    print('.', end=' ')
-        time.sleep(1)
+        time.sleep(0.5)
         print('\n')
         spalte = random.randint(0, 6)
         print(spalte)
@@ -170,7 +170,7 @@ while (True):
         """
         # check ob Bot oder Spieler gewinnen kann und setze in die Spalte einen Stein
         move = suche_gewinner_move()[0]
-        time.sleep(1)
+        time.sleep(0.5)
         print(move)
         if move != -1:
             return move
@@ -180,7 +180,7 @@ while (True):
 
     def bot_hard_move():
         move = suche_gewinner_move()[0]
-        time.sleep(1)
+        time.sleep(0.5)
         print(move)
         if move != -1:
             return move
@@ -217,7 +217,7 @@ while (True):
                 except:
                     pass
 
-        return (-1, "error_move")
+        return (-1, print("error_move"))
 
 
     # ----------------------------------------------------------------------
@@ -502,31 +502,35 @@ while (True):
     anzeige_1 = -1
     counter = 0
 
+    pygame.K_RIGHT, pygame.K_UP, pygame.K_LEFT
     while (running):
 
         while (not spielen_auswahl):
             for event in pygame.event.get():
+                pfeil_links = False
+                pfeil_oben = False
                 if (event.type == pygame.QUIT):
                     pygame.quit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_RIGHT:
                         pygame.quit()
-                    key_to_start = event.key == pygame.K_s
-                    if key_to_start:
-                        start()
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                    elif event.key == pygame.K_s or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        pfeil_oben = True
+                    elif event.key == pygame.K_LEFT:
+                        pfeil_links = True
+                if event.type == pygame.MOUSEBUTTONDOWN or pfeil_links or pfeil_oben:
                     # check when you click if the coordinates of the pointer are in the rectangle of the buttons
-                    if b1.collidepoint(pygame.mouse.get_pos()):
-                        start()
-                        bot = False
-                        spielen_auswahl = True
-                        schwierigkeit_auswahl = True
-                        break
-                    elif b2.collidepoint(pygame.mouse.get_pos()):
+                    if b1.collidepoint(pygame.mouse.get_pos()) or pfeil_links:
                         start()
                         bot = True
                         bot_schwierigkeit = 1
                         spielen_auswahl = True
+                        break
+                    elif b2.collidepoint(pygame.mouse.get_pos()) or pfeil_oben:
+                        start()
+                        bot = False
+                        spielen_auswahl = True
+                        schwierigkeit_auswahl = True
                         break
                     elif b3.collidepoint(pygame.mouse.get_pos()):
                         pygame.quit()
@@ -534,28 +538,32 @@ while (True):
 
         while (not schwierigkeit_auswahl):
             for event in pygame.event.get():
+                pfeil_links = False
+                pfeil_oben = False
+                pfeil_rechts = False
                 if (event.type == pygame.QUIT):
                     pygame.quit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                    key_to_start = event.key == pygame.K_s
-                    if key_to_start:
-                        start()
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.key == pygame.K_RIGHT:
+                        pfeil_rechts = True
+                    elif event.key == pygame.K_s or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        pfeil_oben = True
+                    elif event.key == pygame.K_LEFT:
+                        pfeil_links = True
+                if event.type == pygame.MOUSEBUTTONDOWN or pfeil_links or pfeil_oben or pfeil_rechts:
                     # check when you click if the coordinates of the pointer are in the rectangle of the buttons
-                    if b1.collidepoint(pygame.mouse.get_pos()):
+                    if b1.collidepoint(pygame.mouse.get_pos()) or pfeil_links:
                         start()
                         bot_schwierigkeit = 0
                         schwierigkeit_auswahl = True
                         break
-                    elif b2.collidepoint(pygame.mouse.get_pos()):
+                    elif b2.collidepoint(pygame.mouse.get_pos()) or pfeil_oben:
                         start()
                         bot_schwierigkeit = 1
                         schwierigkeit_auswahl = True
                         start()
                         break
-                    elif b3.collidepoint(pygame.mouse.get_pos()):
+                    elif b3.collidepoint(pygame.mouse.get_pos()) or pfeil_rechts:
                         bot_schwierigkeit = 2
                         schwierigkeit_auswahl = True
                         start()
@@ -563,11 +571,14 @@ while (True):
 
         # standard exit/break out the loop
         for event in pygame.event.get():
+            pfeil_unten = False
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
+                elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                    pfeil_unten = True
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             # check when you click if the coordinates of the pointer are in the rectangle of the buttons
@@ -611,7 +622,7 @@ while (True):
                 x -= x_spacing_for_76
                 time.sleep(0.07)
 
-        if pressed_button_vert[pygame.K_RETURN] or (bot and not spieler) or mouse_pressed:
+        if pressed_button_vert[pygame.K_RETURN] or (bot and not spieler) or mouse_pressed or pfeil_unten:
 
             # --------------------------------------------------
             if bot and not spieler:
@@ -683,28 +694,31 @@ while (True):
 
     while (not abschluss_auswahl):
         for event in pygame.event.get():
+            pfeil_links = False
+            pfeil_oben = False
             if (event.type == pygame.QUIT):
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_RIGHT:
                     pygame.quit()
-                key_to_start = event.key == pygame.K_s
-                if key_to_start:
-                    start()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.key == pygame.K_s or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                    pfeil_oben = True
+                elif event.key == pygame.K_LEFT:
+                    pfeil_links = True
+            if event.type == pygame.MOUSEBUTTONDOWN or pfeil_oben or pfeil_links:
                 # check when you click if the coordinates of the pointer are in the rectangle of the buttons
-                if b1.collidepoint(pygame.mouse.get_pos()):
+                if b1.collidepoint(pygame.mouse.get_pos()) or pfeil_links:
                     spielen_auswahl = True
                     schwierigkeit_auswahl = True
                     abschluss_auswahl = True
-
                     break
-                elif b2.collidepoint(pygame.mouse.get_pos()):
+
+                elif b2.collidepoint(pygame.mouse.get_pos()) or pfeil_oben:
                     spielen_auswahl = False
                     schwierigkeit_auswahl = False
                     abschluss_auswahl = True
-
                     break
+
                 elif b3.collidepoint(pygame.mouse.get_pos()):
                     pygame.quit()
 
