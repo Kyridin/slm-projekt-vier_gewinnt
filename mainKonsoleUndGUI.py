@@ -230,20 +230,18 @@ while (True):
 
     def update_dangerous_col(freie_spalten):
         dangerous_col = []
-        try:
-            for col in range(SPALTEN):
-                temp_spielfeld = copy.deepcopy(spielfeld)
 
+        for col in range(SPALTEN):
+            temp_spielfeld = copy.deepcopy(spielfeld)
+            try:
                 zeile = finde_tiefste_zeile(col, feld=temp_spielfeld)
-                temp_spielfeld[(col, zeile)] = 'X'
+                temp_spielfeld[(col, zeile+1)] = 'O'
 
-                zeile = finde_tiefste_zeile(col, feld=temp_spielfeld)
-                temp_spielfeld[(col, zeile)] = 'O'
+            except:
+                pass
 
-                if suche_gewinner_bot(temp_spielfeld):
-                    dangerous_col.append(col)
-        except:
-            pass
+            if suche_gewinner_bot(temp_spielfeld) and col not in dangerous_col:
+                dangerous_col.append(col)
 
         if dangerous_col == freie_spalten:
             dangerous_col = []
@@ -664,7 +662,8 @@ while (True):
 
         pressed_button_vert = pygame.key.get_pressed()
 
-        #if pressed_button_vert[pygame.K_q]:
+        # Toggle zwischen Bot und Spieler. Gut zum testen
+        # if pressed_button_vert[pygame.K_q]:
         #    print("Bot toggled")
         #    if bot:
         #        bot = False
