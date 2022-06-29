@@ -45,9 +45,9 @@ while (True):
             return True
 
 
-    def finde_tiefste_zeile(spalte):
+    def finde_tiefste_zeile(spalte, feld=spielfeld):
         for zeile in range(ZEILEN):
-            if (spalte, zeile) not in spielfeld:
+            if (spalte, zeile) not in feld:
                 return zeile
 
 
@@ -150,18 +150,13 @@ while (True):
         # ----------------------------------------------------------------------
 
 
-    def bot_easy_move():
+    def bot_easy_move(freie_spalten: list):
         """Bot, der zufällige moves wählt"""
-        # for i in range(3):
-        #    print('.', end=' ')
         time.sleep(0.5)
-        print('\n')
-        spalte = random.randint(0, 6)
-        print(spalte)
-        return spalte
+        return random.choice(freie_spalten)
 
 
-    def bot_normal_move():
+    def bot_normal_move(freie_spalten):
         """
         Bot der einen garantierten Gewinnerzug macht, wenn möglich und
         Gewinnerzüge vom Gegner verhindert.
@@ -171,30 +166,90 @@ while (True):
         # check ob Bot oder Spieler gewinnen kann und setze in die Spalte einen Stein
         move = suche_gewinner_move()[0]
         time.sleep(0.5)
-        print(move)
         if move != -1:
             return move
+        return normal_choice(freie_spalten, stddev=2.5)
 
-        return normal_distribution()
 
-
-    def bot_hard_move():
-        move = suche_gewinner_move()[0]
+    def bot_hard_move(freie_spalten, dangerous_cols):
         time.sleep(0.5)
-        print(move)
+        move = suche_gewinner_move()[0]
         if move != -1:
             return move
-        return normal_distribution()
+
+        move = suche_zwickmuele()
+        if move != -1:
+            print("ZWICKMUELE ERKANNT!")
+            return move
+
+        return normal_choice(freie_spalten, dangerous_cols, stddev=2.5)
 
 
-    def normal_distribution():
-        lower = 0
-        upper = 1
-        mu = 0.5
-        sigma = 0.3
-        N = 1
-        return round(
-            SPALTEN * stats.truncnorm.rvs((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma, size=N)[0])
+    def normal_choice(lst, dangerous_cols=[], mean=None, stddev=None):
+        if mean is None:
+            # if mean is not specified, use center of list
+            mean = (len(lst) - 1) / 2
+
+        if stddev is None:
+            # if stddev is not specified, let list be -3 .. +3 standard deviations
+            stddev = len(lst) / 6
+
+        while True:
+            index = int(random.normalvariate(mean, stddev) + 0.5)
+            if 0 <= index < len(lst) and index not in dangerous_cols:
+                print(dangerous_cols)
+                return lst[index]
+
+
+    def suche_zwickmuele():
+        for row in range(ZEILEN):
+            for col in range(SPALTEN):
+                try:
+                    # check Horizontal
+                    if (col > 0 and col < SPALTEN - 2 and spielfeld[(col, row)] == 'O' and spielfeld[(col + 1, row)] == 'O')\
+                        and ((col - 1, row) not in spielfeld and (col + 2, row) not in spielfeld):
+                            if row == 0 or ((col - 1, row - 1) in spielfeld and (col + 2, row - 1) in spielfeld):
+                                return random.choice([col - 1, col + 2])
+
+                    # check diagonal rechts
+                    if (row > 0 and row < ZEILEN - 2) and (col > 0 and col < SPALTEN - 2) and spielfeld[(col, row)] == 'O':
+                        if spielfeld[(col + 1, row + 1)] == 'O' and ((col + 2, row + 2) not in spielfeld and (col - 1, row - 1) not in spielfeld):
+                            if (row == 1 or (col - 1, row - 1) in spielfeld) and (col + 2, row + 1) in spielfeld:
+                                return random.choice([col - 1, col + 2])
+
+                    # check diagonal links
+                    if (row > 0 and row < ZEILEN - 2) and (col > 1 and col < SPALTEN - 1) and spielfeld[(col, row)] == 'O':
+                        if spielfeld[(col - 1, row + 1)] == 'O' and ((col - 2, row + 2) not in spielfeld and (col + 1, row - 1) not in spielfeld):
+                            if (row == 1 or (col + 1, row - 2) in spielfeld) and (col - 2, row + 1) in spielfeld:
+                                return random.choice([col + 1, col - 2])
+
+                except:
+                    pass
+        return -1
+
+
+    def update_dangerous_col(freie_spalten):
+        dangerous_col = []
+        try:
+            for col in range(SPALTEN):
+                temp_spielfeld = copy.deepcopy(spielfeld)
+
+                zeile = finde_tiefste_zeile(col, feld=temp_spielfeld)
+                temp_spielfeld[(col, zeile)] = 'X'
+
+                zeile = finde_tiefste_zeile(col, feld=temp_spielfeld)
+                temp_spielfeld[(col, zeile)] = 'O'
+
+                if suche_gewinner_bot(temp_spielfeld):
+                    dangerous_col.append(col)
+        except:
+            pass
+
+        if dangerous_col == freie_spalten:
+            dangerous_col = []
+
+        return dangerous_col
+
 
         # ----------------------------------------------------------------------
         #                           Gewinner Suche
@@ -203,6 +258,7 @@ while (True):
 
     def suche_gewinner_move():
         gewinner = -2
+
         for player in range(2):
             for col in range(SPALTEN):
                 try:
@@ -212,7 +268,7 @@ while (True):
 
                     if suche_gewinner_bot(temp_spielfeld):
                         gewinner -= player
-                        print(gewinner)
+                        # print(gewinner)
                         return (col, gewinner)  # -2 = Bot gewinnt, -3 = spieler gewinnt
                 except:
                     pass
@@ -310,19 +366,19 @@ while (True):
 
     ##definition stuff
     # import graphics
-    spielfeld_GUI = pygame.image.load("re_Spielfeld.png")
+    spielfeld_GUI = pygame.image.load("Bilder/re_Spielfeld.png")
     initial_spielfeld = spielfeld_GUI.copy()
-    roter_stein = pygame.image.load("re_rot.png")
+    roter_stein = pygame.image.load("Bilder/re_rot.png")
     initial_roter_stein = roter_stein.copy()
-    gelber_stein = pygame.image.load("re_gelb.png")
+    gelber_stein = pygame.image.load("Bilder/re_gelb.png")
 
-    linie_0 = pygame.image.load("re_Linie0.png")
+    linie_0 = pygame.image.load("Bilder/re_Linie0.png")
     initial_spielfeld = linie_0.copy()
-    linie_1 = pygame.image.load("re_Linie1.png")
+    linie_1 = pygame.image.load("Bilder/re_Linie1.png")
     initial_spielfeld = linie_1.copy()
-    linie_2 = pygame.image.load("re_Linie2.png")
+    linie_2 = pygame.image.load("Bilder/re_Linie2.png")
     initial_spielfeld = linie_2.copy()
-    linie_3 = pygame.image.load("re_Linie3.png")
+    linie_3 = pygame.image.load("Bilder/re_Linie3.png")
     initial_spielfeld = linie_3.copy()
 
     first_field_coordinates = (-283, -34)
@@ -399,17 +455,17 @@ while (True):
     #                          Zugabe Buttons
     # ----------------------------------------------------------------------
 
-    buttons_transparent = pygame.image.load("Buttons_Transparent.png")
-    hauptmenue_1 = pygame.image.load("Hauptmenue_1.png")
-    schwierigkeitsauswahl = pygame.image.load("Schwierigkeitsauswahl.png")
-    abschluss = pygame.image.load("Abschluss.png")
+    buttons_transparent = pygame.image.load("Bilder/Buttons_Transparent.png")
+    hauptmenue_1 = pygame.image.load("Bilder/Hauptmenue_1.png")
+    schwierigkeitsauswahl = pygame.image.load("Bilder/Schwierigkeitsauswahl.png")
+    abschluss = pygame.image.load("Bilder/Abschluss.png")
 
-    gelb_win = pygame.image.load("gelb_win.png")
-    rot_win = pygame.image.load("rot_win.png")
-    du_win = pygame.image.load("du_win.png")
-    com_win = pygame.image.load("com_win.png")
-    unent_win = pygame.image.load("unentschieden.png")
-    spalte_button = pygame.image.load("Spalte.png")
+    gelb_win = pygame.image.load("Bilder/gelb_win.png")
+    rot_win = pygame.image.load("Bilder/rot_win.png")
+    du_win = pygame.image.load("Bilder/du_win.png")
+    com_win = pygame.image.load("Bilder/com_win.png")
+    unent_win = pygame.image.load("Bilder/unentschieden.png")
+    spalte_button = pygame.image.load("Bilder/Spalte.png")
 
 
     def draw_hauptmenue_surface():
@@ -501,6 +557,8 @@ while (True):
     abschluss_auswahl = False
     anzeige_1 = -1
     counter = 0
+    freie_spalten = [0, 1, 2, 3, 4, 5, 6]
+    gefaehrliche_spalten = []
 
     pygame.K_RIGHT, pygame.K_UP, pygame.K_LEFT
     while (running):
@@ -605,6 +663,15 @@ while (True):
                 spalte = 6
 
         pressed_button_vert = pygame.key.get_pressed()
+
+        #if pressed_button_vert[pygame.K_q]:
+        #    print("Bot toggled")
+        #    if bot:
+        #        bot = False
+        #    else:
+        #        bot = True
+        #    time.sleep(1)
+
         if pressed_button_vert[pygame.K_RIGHT]:
             x_index += 1
             if x_index > 7:
@@ -627,11 +694,11 @@ while (True):
             # --------------------------------------------------
             if bot and not spieler:
                 if bot_schwierigkeit == 0:
-                    spalte = bot_easy_move()
+                    spalte = bot_easy_move(freie_spalten)
                 elif bot_schwierigkeit == 1:
-                    spalte = bot_normal_move()
+                    spalte = bot_normal_move(freie_spalten)
                 else:
-                    spalte = bot_hard_move()
+                    spalte = bot_hard_move(freie_spalten, gefaehrliche_spalten)
             elif mouse_pressed:
                 pass
             else:
@@ -663,6 +730,14 @@ while (True):
                 drop_stone(convert_zeile_dropStone[zeile])  # Number of Falling Rows
                 x = convert_spalte_x_bot[x_index - 1]
                 print(x, "|", y)
+
+                gefaehrliche_spalten = update_dangerous_col(freie_spalten)
+                print(gefaehrliche_spalten)
+            else:
+                try:
+                    freie_spalten.remove(spalte)
+                except:
+                    pass
 
         if (gewinner):
             pos_endstein = suche_gewinner(spielfeld)[1]

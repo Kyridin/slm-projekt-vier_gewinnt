@@ -58,11 +58,11 @@ def switch_stone(current_stone):
 
 ##definition stuff
 #import graphics
-spielfeld = pygame.image.load("re_Spielfeld.png")
+spielfeld = pygame.image.load("Bilder/re_Spielfeld.png")
 initial_spielfeld = spielfeld.copy()
-roter_stein = pygame.image.load("re_rot.png")
+roter_stein = pygame.image.load("Bilder/re_rot.png")
 initial_roter_stein = roter_stein.copy()
-gelber_stein = pygame.image.load("re_gelb.png")
+gelber_stein = pygame.image.load("Bilder/re_gelb.png")
 first_field_coordinates = (-283, -34)
 
 #color variables shortcuts

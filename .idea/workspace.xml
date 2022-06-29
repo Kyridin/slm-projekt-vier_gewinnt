@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a574cd4e-cff3-4d9d-a4c2-d2e3fad3d19d" name="Changes" comment="" />
+    <list default="true" id="a574cd4e-cff3-4d9d-a4c2-d2e3fad3d19d" name="Changes" comment="- Hard Bot erkennt Zwickmülen (kinda)&#10;- Hard Bot erkennt Spalten wo es gefährlich sein könnte, einen Zug zu machen (manchmal)&#10;- Algorithmus zum Spaltenfinden optimiert&#10;- Bilder in einen eigenen Ordner Sortiert">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/slm-projekt-vier_gewinnt.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/slm-projekt-vier_gewinnt.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abschluss.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/Abschluss.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Buttons_Transparent.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/Buttons_Transparent.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hauptmenue_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/Hauptmenue_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Schwierigkeitsauswahl.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/Schwierigkeitsauswahl.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spalte.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/Spalte.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/com_win.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/com_win.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo_gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/demo_gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/du_win.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/du_win.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gelb_win.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/gelb_win.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mainKonsoleUndGUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainKonsoleUndGUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_Linie0.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/re_Linie0.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_Linie1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/re_Linie1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_Linie2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/re_Linie2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_Linie3.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/re_Linie3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_Spielfeld.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/re_Spielfeld.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_gelb.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/re_gelb.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_rot.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/re_rot.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rot_win.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/rot_win.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unentschieden.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bilder/unentschieden.png" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,7 +48,14 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jan\iCloudDrive\Uni\Semester 4\SLM\slm-projekt-vier_gewinnt\Bilder" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.mainKonsoleUndGUI">
     <configuration name="demo_gui" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -40,6 +70,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/demo_gui.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -61,6 +92,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -77,11 +109,12 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\jan\PycharmProjects\Uebung5\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mainKonsoleUndGUI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -112,7 +145,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655892172659</updated>
+      <workItem from="1656264909022" duration="2704000" />
+      <workItem from="1656349511555" duration="995000" />
+      <workItem from="1656357157811" duration="2321000" />
+      <workItem from="1656427572554" duration="7267000" />
+      <workItem from="1656452505235" duration="2300000" />
+      <workItem from="1656498408904" duration="5044000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="- Hard Bot erkennt Zwickmülen (kinda)&#10;- Hard Bot erkennt Spalten wo es gefährlich sein könnte, einen Zug zu machen (manchmal)&#10;- Algorithmus zum Spaltenfinden optimiert&#10;- Bilder in einen eigenen Ordner Sortiert" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Hard Bot erkennt Zwickmülen (kinda)&#10;- Hard Bot erkennt Spalten wo es gefährlich sein könnte, einen Zug zu machen (manchmal)&#10;- Algorithmus zum Spaltenfinden optimiert&#10;- Bilder in einen eigenen Ordner Sortiert" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/slm_projekt_vier_gewinnt$mainKonsoleUndGUI.coverage" NAME="mainKonsoleUndGUI Coverage Results" MODIFIED="1656503333999" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
